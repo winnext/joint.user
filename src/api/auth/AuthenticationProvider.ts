@@ -1,7 +1,9 @@
 import AWS from 'aws-sdk';
 import crypto from 'crypto';
+import * as dotenv from 'dotenv';
 import ApiError from '../../core/ApiError';
 
+dotenv.config();
 class CognitoService {
   private config = {
     accessKeyId: process.env.COGNITO_ACCESS_KEY_ID,
@@ -31,6 +33,23 @@ class CognitoService {
     try {
       const data = await this.cognitoIdentity.signUp(params).promise();
       return String(data.UserSub);
+    } catch (error) {
+      const err = new ApiError(`User cannot be registered. Details : ${error}`, __filename);
+      return err;
+    }
+  }
+
+  public async confirmUser(username: string, confirmationCode: string)
+    :Promise<any> {
+    const params = {
+      ClientId: this.clientId,
+      ConfirmationCode: confirmationCode,
+      Username: username,
+      SecretHash: this.generateHash(username),
+    };
+    try {
+      await this.cognitoIdentity.confirmSignUp(params).promise();
+      return 'User Confirmed';
     } catch (error) {
       const err = new ApiError(`User cannot be registered. Details : ${error}`, __filename);
       return err;

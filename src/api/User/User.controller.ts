@@ -29,6 +29,22 @@ export default class UserController {
     return res;
   }
 
+  static async verificateUser(data: JSON): Promise<String> {
+    const convertion = JSON.stringify(data);
+    const myObj = JSON.parse(convertion);
+
+    const {
+      username, confirmationCode,
+    } = {
+      username: myObj.username,
+      confirmationCode: myObj.confirmationCode,
+    };
+
+    const cognito = new CognitoService();
+    const res = cognito.confirmUser(String(username), String(confirmationCode));
+    return res;
+  }
+
   static async deleteUser(data: JSON): Promise<String> {
     const convertion = JSON.stringify(data);
     const myObj = JSON.parse(convertion);
