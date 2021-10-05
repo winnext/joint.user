@@ -43,6 +43,8 @@ export default {
 
   // An object that configures minimum threshold enforcement for coverage results
   // coverageThreshold: undefined,
+    testTimeout: 60000,
+  testMatch: ["**/?(*.)+(spec|test).ts"],
 
   // A path to a custom dependency extractor
   // dependencyExtractor: undefined,

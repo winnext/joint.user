@@ -1,0 +1,21 @@
+type User {
+  username: String
+  firstName: String
+  lastName: String
+  email: String
+  password: String
+  birthdate: String
+}
+
+type RootQuery {
+    getUser: String
+}
+
+type RootMutation {
+  createUser(firstName: String, username: String, lastName: String, email: String, password: String, birthdate: String): String
+  deleteUser(username: String, poolId: String): String
+}
+schema {
+  query: RootQuery
+  mutation: RootMutation
+}
