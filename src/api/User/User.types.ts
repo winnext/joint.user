@@ -15,5 +15,6 @@ export type RootMutation = {
   // eslint-disable-next-line no-unused-vars
   createUser(firstName: String, username: String, lastName: String,
     email: String, password: String, birthdate: String): String;
+  verificateUser(username: String, confirmationCode: String): String;
   deleteUser(username: String, poolId: String): String;
 };

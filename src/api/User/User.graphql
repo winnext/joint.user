@@ -13,6 +13,7 @@ type RootQuery {
 
 type RootMutation {
   createUser(firstName: String, username: String, lastName: String, email: String, password: String, birthdate: String): String
+  verificateUser(username: String, confirmationCode: String): String
   deleteUser(username: String, poolId: String): String
 }
 schema {
