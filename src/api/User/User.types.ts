@@ -16,4 +16,6 @@ export type RootMutation = {
   createUser(firstName: String, username: String, lastName: String,
     email: String, password: String, birthdate: String): String;
   deleteUser(username: String, poolId: String): String;
+  forgotPassword(username:String):String;
+  confirmPassword(username:String,verficationCode:String,newPassword:String):String;
 };

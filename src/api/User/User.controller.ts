@@ -43,4 +43,33 @@ export default class UserController {
     const res = cognito.deleteUser(String(username), String(poolId));
     return res;
   }
+  static async forgotPassword(data: JSON): Promise<String> {
+    const convertion = JSON.stringify(data);
+    const myObj = JSON.parse(convertion);
+
+    const {
+      username
+    } = {
+      username: myObj.username
+    };
+    const cognito = new CognitoService();
+    const res = cognito.forgotPassword(String(username));
+    return res;
+  }
+  static async confirmPassword(data:JSON):Promise<String>{
+    const convertion = JSON.stringify(data);
+    const myObj = JSON.parse(convertion);
+
+    const {
+      username,verficationCode,newPassword
+    } = {
+      username:myObj.username,
+      verficationCode: myObj.verficationCode,
+      newPassword:myObj.newPassword
+    };
+    const cognito = new CognitoService();
+    const res = cognito.confirmPassword(String(username),String(verficationCode),String(newPassword));
+    return res;
+  }
+  
 }

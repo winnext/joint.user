@@ -1,7 +1,8 @@
 import AWS from 'aws-sdk';
 import crypto from 'crypto';
 import ApiError from '../../core/ApiError';
-
+import * as dotenv from 'dotenv';
+dotenv.config()
 class CognitoService {
   private config = {
     accessKeyId: process.env.COGNITO_ACCESS_KEY_ID,
@@ -30,10 +31,11 @@ class CognitoService {
     };
     try {
       const data = await this.cognitoIdentity.signUp(params).promise();
-      return String(data.UserSub);
+      return String(data.UserSub);  
     } catch (error) {
       const err = new ApiError(`User cannot be registered. Details : ${error}`, __filename);
       return err;
+    
     }
   }
 
@@ -51,8 +53,64 @@ class CognitoService {
       return err;
     }
   }
-
-  private generateHash(username: string): string {
+  public async loginUser(username: string, clientId:string,poolId: string)
+  :Promise<any> {
+  
+  
+    const params = {
+      AuthFlow: 'CUSTOM_AUTH',
+      ClientId: '1h0uleh31msvqefoqoinfodnve',
+      
+      AuthParameters: {
+        USERNAME: 'ismail.sahin@signumtte.com',
+        PASSWORD: 'ismailsahin-',
+        
+      }
+    };
+    console.log(params);
+    console.log(this.config);
+    
+    try {
+      await this.cognitoIdentity.initiateAuth(params).promise();
+      return 'User Login';
+    } catch (error) {
+      const err = new ApiError(`User login error. Details : ${error}`, __filename);
+      return err;
+    }
+}
+public async forgotPassword(username: string)
+    :Promise<any> {
+    const params = {
+      ClientId: this.clientId,
+      Username: username,
+      SecretHash: this.generateHash(username),
+    };
+    try {
+      const data = await this.cognitoIdentity.forgotPassword(params).promise();
+      return 'Verification code is sent. Please check your email'
+    } catch (error) {
+      const err = new ApiError(`Cannot send verifivation code. Details : ${error}`, __filename);
+      return err;
+    }
+}
+public async confirmPassword(username:string,verficationCode: string,newPassword:string)
+    :Promise<any> {
+    const params = {
+      ClientId: this.clientId,
+      ConfirmationCode: verficationCode,
+      Password: newPassword,
+      Username: username,
+      SecretHash: this.generateHash(username),
+    };
+    try {
+      const data = await this.cognitoIdentity.confirmForgotPassword(params).promise();
+      return 'Password updated!'
+    } catch (error) {
+      const err = new ApiError(`Password cannot be changed. Details : ${error}`, __filename);
+      return err;
+    }
+}
+private generateHash(username: string): string {
     return crypto.createHmac('SHA256', this.secretHash)
       .update(username + this.clientId)
       .digest('base64');
