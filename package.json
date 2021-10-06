@@ -4,7 +4,8 @@
   "description": "Sonarqube Scan - Test",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "run": "tsc && node dist/index.js"
   },
   "repository": {
     "type": "git",
